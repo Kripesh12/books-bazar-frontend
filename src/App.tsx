@@ -1,8 +1,9 @@
-import { Button } from "@mantine/core";
+import Layout from "./layout/Layout";
+
 function App() {
   return (
     <>
-      <Button>Mantine Button</Button>
+      <Layout />
     </>
   );
 }
