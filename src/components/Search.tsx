@@ -9,7 +9,7 @@ export default function Search({ width }: SearchProps) {
   return (
     <Box>
       <Input
-        placeholder="Search for product"
+        placeholder="Search in booksbazar"
         w={width}
         leftSection=<FaSearch />
       />
