@@ -1,15 +1,26 @@
 import { Box, Button, Image, Paper, Text } from "@mantine/core";
 import { BookInterface } from "./HomePage/JustForYou";
+import { useNavigate } from "react-router-dom";
 
 interface BookProps {
   book: BookInterface;
 }
 
 export default function Book({ book }: BookProps) {
+  const navigate = useNavigate();
   const { title, author, price, image } = book;
 
   return (
-    <Paper mt={24} withBorder display="inline-block" p={10} shadow="md" w={210}>
+    <Paper
+      mt={24}
+      withBorder
+      display="inline-block"
+      p={10}
+      shadow="md"
+      w={210}
+      style={{ cursor: "pointer" }}
+      onClick={() => navigate("/product-info")}
+    >
       <Image src={image} width={200} height={300} alt={title} />
       <Box w={180}>
         <Text fz={20} mt={10} fw="bold" truncate="end">
