@@ -1,18 +1,13 @@
-import { Box, Image } from "@mantine/core";
-import { Carousel } from "@mantine/carousel";
+import { Box } from "@mantine/core";
+import HomePageCarousel from "../components/HomePage/HomePageCarousel";
+import HomePageCategories from "../components/HomePage/HomePageCategories";
+import JustForYou from "../components/HomePage/JustForYou";
 export default function HomePage() {
   return (
     <Box>
-      <Box>
-        <Carousel mt={40} withControls={false} loop={true}>
-          <Carousel.Slide>
-            <Image src="src/assets/image/Book-Banner.jpg" />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <Image src="src/assets/image/Card-Discount.jpg" />
-          </Carousel.Slide>
-        </Carousel>
-      </Box>
+      <HomePageCarousel />
+      <HomePageCategories />
+      <JustForYou />
     </Box>
   );
 }

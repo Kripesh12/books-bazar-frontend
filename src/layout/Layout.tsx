@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 export default function Layout() {
   return (
-    <Container>
+    <Container maw={1370}>
       <Navbar />
       <Outlet />
     </Container>
