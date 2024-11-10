@@ -28,7 +28,7 @@ export default function SellerLayout() {
       }}
       padding="md"
     >
-      <AppShell.Header p={20}>
+      <AppShell.Header py={10} px={20}>
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
         <SellerNavbar />
       </AppShell.Header>

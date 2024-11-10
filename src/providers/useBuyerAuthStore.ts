@@ -11,7 +11,7 @@ interface BuyerAuthState {
   setBuyerId: (id: string) => void;
 }
 
-const useSellerAuthStore = create<BuyerAuthState>()(
+const useBuyerAuthStore = create<BuyerAuthState>()(
   persist(
     (set) => ({
       accessToken: null,
@@ -29,4 +29,4 @@ const useSellerAuthStore = create<BuyerAuthState>()(
   )
 );
 
-export default useSellerAuthStore;
+export default useBuyerAuthStore;

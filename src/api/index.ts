@@ -3,6 +3,15 @@ import useSellerAuthStore from "../providers/useSellerAuthStore";
 
 const baseURL = "http://192.168.1.85:3000/api/v1";
 
+//For Buyer
+export const axiosBuyerPrivateInstance = axios.create({
+  baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+//For Seller
 export const axiosPrivateInstance = axios.create({
   baseURL,
   headers: {
@@ -10,6 +19,7 @@ export const axiosPrivateInstance = axios.create({
   },
 });
 
+//Open
 export const axiosPublicInstance = axios.create({
   baseURL,
   headers: {

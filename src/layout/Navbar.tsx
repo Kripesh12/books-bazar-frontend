@@ -19,7 +19,7 @@ export default function Navbar() {
         <StyledLink to={"/"}>BooksBazar</StyledLink>
         <Search width={250} />
         <Flex gap={20}>
-          <Text>Seller</Text>
+          <StyledLink to={"/seller-login"}>Selleer</StyledLink>
           <StyledLink to={"/login"}>Login</StyledLink>
           <StyledLink to={"/signup"}>Signup</StyledLink>
         </Flex>
