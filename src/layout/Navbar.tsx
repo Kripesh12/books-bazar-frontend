@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import Search from "../components/Search";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
