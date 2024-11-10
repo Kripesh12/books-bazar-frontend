@@ -13,7 +13,7 @@ const StyledLink = styled(Link)`
 
 export default function SellerNavbar() {
   return (
-    <Box mt={10}>
+    <Box>
       <Flex justify={"space-between"} align={"center"}>
         <StyledLink to={"/seller"}>BooksBazar - Seller</StyledLink>
         <Flex gap={20}>
