@@ -1,72 +1,90 @@
-import { Box, Button, Divider, Flex, Group, Image, Text } from "@mantine/core";
-import { useState } from "react";
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  Group,
+  Image,
+  Loader,
+  Text,
+} from "@mantine/core";
+import { useNavigate, useParams } from "react-router-dom";
+import { axiosPublicInstance } from "../../../api";
+import { useQuery } from "@tanstack/react-query";
+import AlertComponent from "../../../utils/AlertComponent";
+import useBuyerAuthStore from "../../../providers/useBuyerAuthStore";
+import { toast } from "react-toastify";
 export default function ProductInfo() {
-  const [count, setCount] = useState(1);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { isAuth } = useBuyerAuthStore();
+
+  function handelAddToCart() {
+    if (!isAuth) {
+      navigate("/login");
+      toast.error("User must be logged in");
+      return;
+    }
+  }
+
+  //Fetch Book
+  async function fetchBookById() {
+    const res = await axiosPublicInstance.get(`/book/${id}`);
+    return res.data;
+  }
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["bookbyid"],
+    queryFn: fetchBookById,
+  });
+
+  if (isLoading) {
+    return (
+      <Center mt={20}>
+        <Loader size={"lg"} />
+      </Center>
+    );
+  }
+
+  if (isError) {
+    return <AlertComponent message={error.message} title="An error occured" />;
+  }
+
   return (
     <Box mt={60}>
       <Box>
         <Flex gap={40}>
           {/* Product Image */}
-          <Image
-            w={400}
-            h={600}
-            src={
-              "https://images-na.ssl-images-amazon.com/images/I/71QKQ9mwV7L.jpg"
-            }
-          />
+          <Image w={400} h={600} src={data.photo} />
 
           {/* Product Info */}
-          <Box mt={20}>
+          <Box mt={20} w={"100%"}>
             <Text fz={40} fw={"bold"}>
-              Subtle Art of not giving a fuck
+              {data.title}
             </Text>
             <Group>
               <Text fz={18} c={"dark"}>
                 by
               </Text>
-              <Text fz={24}>Kripesh Sharma</Text>
+              <Text fz={24}>{data.author}</Text>
             </Group>
             <Divider size={2} mt={10} />
 
             {/* Sypnosis */}
             <Box mt={20}>
               <Text fz={24} fw={"bold"}>
-                Sypnosis
+                Description
               </Text>
-              <Text fz={18}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Doloribus officiis commodi quidem hic cumque optio velit ullam
-                suscipit perspiciatis impedit ex laboriosam, fugit inventore
-                eaque quos dolor voluptatem quis voluptatibus?
-              </Text>
+              <Text fz={18}>{data.description}</Text>
             </Box>
 
             {/* Action */}
             <Box mt={20}>
               <Text fz={32} fw={"bold"}>
-                Rs 1234
+                Rs {data.price}
               </Text>
-              <Group mt={10}>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    if (count == 1) return;
-                    setCount((prev) => prev - 1);
-                  }}
-                >
-                  -
-                </Button>
-                <Text fz={18}>{count}</Text>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setCount((prev) => prev + 1);
-                  }}
-                >
-                  +
-                </Button>
-              </Group>
-              <Button mt={20} size="lg">
+              <Button mt={20} size="lg" onClick={handelAddToCart}>
                 ADD TO CART
               </Button>
             </Box>

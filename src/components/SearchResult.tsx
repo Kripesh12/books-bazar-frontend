@@ -1,4 +1,4 @@
-import { Box, Divider, Image, Paper, Text } from "@mantine/core";
+import { Box, Flex, Image, Paper, Text } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { BookInterface } from "../Pages/seller/ListBook/ListBook";
 
@@ -6,19 +6,22 @@ interface BookProps {
   book: BookInterface;
 }
 
-export default function Book({ book }: BookProps) {
+export default function SearchResult({ book }: BookProps) {
   const navigate = useNavigate();
   const { title, author, price, photo, id } = book;
 
   return (
-    <Paper withBorder display="inline-block" shadow="md" w={210}>
-      <Box
-        style={{ cursor: "pointer" }}
-        onClick={() => navigate(`/product-info/${id}`)}
-      >
-        <Image src={photo} width={200} height={300} alt={title} />
-        <Divider mt={8} />
-        <Box w={180} mt={8} p={8}>
+    <Paper
+      py={10}
+      px={20}
+      withBorder={true}
+      shadow="md"
+      style={{ cursor: "pointer" }}
+      onClick={() => navigate(`/product-info/${id}`)}
+    >
+      <Flex justify={"space-between"} align={"center"}>
+        <Image src={photo} w={80} alt={title} />
+        <Box>
           <Text fz={20} fw="bold" truncate="end" c={"#404040"}>
             {title}
           </Text>
@@ -35,7 +38,7 @@ export default function Book({ book }: BookProps) {
             </Text>
           </Text>
         </Box>
-      </Box>
+      </Flex>
     </Paper>
   );
 }

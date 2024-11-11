@@ -10,14 +10,16 @@ import {
   Group,
   Button,
 } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
   return (
     <Container size={420} my={80}>
-      <Title ta="center">Welcome back!</Title>
+      <Title ta="center">Login</Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Do not have an account yet?{" "}
-        <Anchor size="sm" component="button">
+        <Anchor size="sm" onClick={() => navigate("/signup")}>
           Create account
         </Anchor>
       </Text>
