@@ -15,7 +15,7 @@ import { useDisclosure } from "@mantine/hooks";
 import SellerNavbar from "./SellerNavbar";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { FaChartLine, FaBook, FaTags, FaUser } from "react-icons/fa";
+import { FaBook, FaTags, FaUser } from "react-icons/fa";
 
 export default function SellerLayout() {
   const [opened, { toggle, close }] = useDisclosure();
