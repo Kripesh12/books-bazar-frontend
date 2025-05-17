@@ -1,44 +1,65 @@
-import { Box, Flex, Image, Paper, Text } from "@mantine/core";
+import { Box, Group, Image, Paper, Text, Badge } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { BookInterface } from "../Pages/seller/ListBook/ListBook";
 
 interface BookProps {
   book: BookInterface;
+  close: () => void;
 }
 
-export default function SearchResult({ book }: BookProps) {
+export default function SearchResult({ book, close }: BookProps) {
   const navigate = useNavigate();
   const { title, author, price, photo, id } = book;
 
   return (
     <Paper
-      py={10}
-      px={20}
-      withBorder={true}
-      shadow="md"
-      style={{ cursor: "pointer" }}
-      onClick={() => navigate(`/product-info/${id}`)}
+      p="sm"
+      radius="md"
+      withBorder
+      shadow="xs"
+      style={{
+        cursor: "pointer",
+        transition: "transform 0.2s, box-shadow 0.2s",
+        "&:hover": {
+          transform: "translateY(-2px)",
+          boxShadow: "var(--mantine-shadow-md)",
+        },
+      }}
+      onClick={() => {
+        close();
+        navigate(`/product-info/${id}`);
+      }}
     >
-      <Flex justify={"space-between"} align={"center"}>
-        <Image src={photo} w={80} alt={title} />
-        <Box>
-          <Text fz={20} fw="bold" truncate="end" c={"#404040"}>
+      <Group wrap="nowrap" align="flex-start" gap="md">
+        <Image
+          src={photo}
+          w={90}
+          h={120}
+          alt={title}
+          radius="sm"
+          fit="contain"
+          style={{ border: "1px solid var(--mantine-color-gray-2)" }}
+        />
+
+        <Box style={{ flex: 1, minWidth: 0 }}>
+          <Text fz={{ base: "md", sm: "lg" }} fw={600} lineClamp={1} mb={4}>
             {title}
           </Text>
-          <Text c={"#696969"} fz={12}>
-            by{" "}
-            <Text span c={"dark"}>
-              {author}
-            </Text>
+
+          <Text c="dimmed" fz="sm" lineClamp={1} mb={8}>
+            by {author}
           </Text>
-          <Text fz={18} mt={8}>
-            Rs.{" "}
-            <Text span fz={24} fw={"bold"} c="#33333">
-              {price}
+
+          <Group justify="space-between" align="flex-end">
+            <Text fz="xl" fw={700} c="blue">
+              Rs. {price}
             </Text>
-          </Text>
+            <Badge variant="light" color="green" size="sm">
+              In Stock
+            </Badge>
+          </Group>
         </Box>
-      </Flex>
+      </Group>
     </Paper>
   );
 }

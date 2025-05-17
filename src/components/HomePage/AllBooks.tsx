@@ -4,29 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosBuyerPrivateInstance } from "../../api";
 import { BookInterface } from "../../Pages/seller/ListBook/ListBook";
 
-export default function JustForYou() {
+export default function AllBooks() {
   async function fetchRecommendations() {
-    const { data } = await axiosBuyerPrivateInstance.get(
-      "/book/recommendations",
-      {
-        params: {
-          userId: "a0b22c9a-5af6-4be4-8d11-ce75b89eb11a",
-        },
-      }
-    );
+    const { data } = await axiosBuyerPrivateInstance.get("/book");
+
     return data;
   }
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["recommendations"],
+    queryKey: ["allBooks"],
     queryFn: fetchRecommendations,
   });
 
-  console.log("Recomendation Data: ", data);
   return (
     <Box p={"md"}>
       <Text size="xl" fw={600} mb="xl">
-        Recommended Just For You
+        All Books
       </Text>
 
       {isError ? (
@@ -37,7 +30,7 @@ export default function JustForYou() {
           bg="var(--mantine-color-red-light)"
         >
           <Text c="red" fw={500} ta="center">
-            Failed to load recommendations. Please refresh the page.
+            Failed to load Books. Please refresh the page.
           </Text>
         </Paper>
       ) : isLoading ? (
@@ -61,7 +54,7 @@ export default function JustForYou() {
             bg="var(--mantine-color-blue-light)"
           >
             <Text c="blue" fw={500} ta="center">
-              No recommendations available yet. Check back later!
+              No books available yet. Check back later!
             </Text>
           </Paper>
         </Center>

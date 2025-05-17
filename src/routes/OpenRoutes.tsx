@@ -5,6 +5,7 @@ import SellerLogin from "../Pages/seller/auth/SellerLogin";
 import SellerSignup from "../Pages/seller/auth/SellerSignup";
 import SellerVerifiedSignup from "../Pages/seller/auth/SellerVerifiedSignup";
 import Layout from "../layout/Layout";
+import Verified from "../Pages/buyer/auth/Verified";
 
 const OpenRoutes: RouteObject = {
   path: "/",
@@ -29,6 +30,10 @@ const OpenRoutes: RouteObject = {
     {
       path: "seller-verified/:token",
       element: <SellerVerifiedSignup />,
+    },
+    {
+      path: "customer-verified/:token",
+      element: <Verified />,
     },
   ],
 };

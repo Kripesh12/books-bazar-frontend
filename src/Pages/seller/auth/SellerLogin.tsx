@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   TextInput,
   PasswordInput,
@@ -46,7 +47,7 @@ export default function SellerLogin() {
       const { refreshToken } = res.data;
       if (res?.status === 201) {
         toast.success("Login Successfully");
-        sessionStorage.setItem("rToken", refreshToken);
+        localStorage.setItem("rToken", refreshToken);
         navigate("/seller");
       }
     } catch (error: any) {

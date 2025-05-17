@@ -1,4 +1,4 @@
-import { Box, Divider, Image, Paper, Text } from "@mantine/core";
+import { Box, Image, Paper, Text, Group } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { BookInterface } from "../Pages/seller/ListBook/ListBook";
 
@@ -11,29 +11,36 @@ export default function Book({ book }: BookProps) {
   const { title, author, price, photo, id } = book;
 
   return (
-    <Paper withBorder display="inline-block" shadow="md" w={210}>
-      <Box
-        style={{ cursor: "pointer" }}
-        onClick={() => navigate(`/product-info/${id}`)}
-      >
-        <Image src={photo} width={200} height={300} alt={title} />
-        <Divider mt={8} />
-        <Box w={180} mt={8} p={8}>
-          <Text fz={20} fw="bold" truncate="end" c={"#404040"}>
+    <Paper
+      withBorder
+      radius="md"
+      shadow="sm"
+      style={{ cursor: "pointer" }}
+      onClick={() => navigate(`/product-info/${id}`)}
+    >
+      <Box>
+        <Image
+          src={photo}
+          alt={title}
+          fit="cover"
+          radius="md"
+          style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+        />
+
+        <Box p="md">
+          <Text fz="lg" fw={600} lineClamp={1} mb={4}>
             {title}
           </Text>
-          <Text c={"#696969"} fz={12}>
-            by{" "}
-            <Text span c={"dark"}>
-              {author}
-            </Text>
+
+          <Text c="dimmed" fz="sm" mb={8}>
+            by {author}
           </Text>
-          <Text fz={18} mt={8}>
-            Rs.{" "}
-            <Text span fz={24} fw={"bold"} c="#33333">
-              {price}
+
+          <Group justify="space-between" mt="md">
+            <Text fz="xl" fw={700}>
+              Rs. {price}
             </Text>
-          </Text>
+          </Group>
         </Box>
       </Box>
     </Paper>

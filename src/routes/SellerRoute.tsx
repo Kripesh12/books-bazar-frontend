@@ -5,6 +5,11 @@ import ListBook from "../Pages/seller/ListBook/ListBook";
 import ListNewBook from "../Pages/seller/ListBook/ListNewBook";
 import EditBook from "../Pages/seller/ListBook/EditBook";
 
+import ListCategories from "../Pages/seller/ListCategory/ListCategory";
+import AddCategory from "../Pages/seller/ListCategory/AddCategory";
+import EditCategory from "../Pages/seller/ListCategory/EditCategory";
+import ListSoldBook from "../Pages/seller/ListSoldBook/ListSoldBook";
+
 const SellerRoute: RouteObject = {
   path: "/seller",
   element: <SellerLayout />,
@@ -13,6 +18,10 @@ const SellerRoute: RouteObject = {
       index: true,
       path: "dashboard",
       element: <SellerHomePage />,
+    },
+    {
+      path: "sold-books",
+      element: <ListSoldBook />,
     },
     {
       path: "list-book",
@@ -25,6 +34,18 @@ const SellerRoute: RouteObject = {
     {
       path: "edit-book",
       element: <EditBook />,
+    },
+    {
+      path: "list-category",
+      element: <ListCategories />,
+    },
+    {
+      path: "add-category",
+      element: <AddCategory />,
+    },
+    {
+      path: "edit-category",
+      element: <EditCategory />,
     },
   ],
 };

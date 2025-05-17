@@ -9,12 +9,11 @@ import AlertComponent from "../../utils/AlertComponent";
 export default function HomePageCategories() {
   const navigate = useNavigate();
 
-  //Fetch all the category information
   async function fetchGenre() {
     const res = await axiosPublicInstance.get("/category");
-    console.log(res.data);
     return res.data;
   }
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["genre"],
     queryFn: fetchGenre,
@@ -23,38 +22,43 @@ export default function HomePageCategories() {
   if (isLoading) {
     return (
       <Center mt={30}>
-        <Group>
-          <Loader />
-          <Text>Loading Genre</Text>
+        <Group gap="xs">
+          <Loader size="sm" />
+          <Text size="sm">Loading categories...</Text>
         </Group>
       </Center>
     );
   }
 
   if (isError) {
-    return <AlertComponent title="Error occured" message={error.message} />;
+    return <AlertComponent title="Error" message={error.message} />;
   }
 
   return (
-    <Box mt={24}>
-      <Text fz={24}>Genre</Text>
+    <Box mt={40} p="md">
+      <Text size="xl" fw={600} mb="xl">
+        Browse by Genre
+      </Text>
+
       <Carousel
-        mt={40}
+        slideSize="160px"
+        slideGap="md"
+        align="start"
+        slidesToScroll={4}
         withControls
-        loop={true}
-        slideSize={"20%"}
-        slideGap={"lg"}
+        loop
       >
         {data?.map((genre: CategoryInterface) => (
           <Carousel.Slide key={genre.id}>
             <Paper
-              p={20}
-              withBorder={true}
-              shadow="md"
-              style={{ cursor: "pointer" }}
+              p="lg"
+              radius="md"
+              withBorder
               onClick={() => navigate(`/books/${genre.name}/${genre.id}`)}
             >
-              <Text ta={"center"}>{genre.name}</Text>
+              <Text size="sm" fw={500} ta="center">
+                {genre.name}
+              </Text>
             </Paper>
           </Carousel.Slide>
         ))}

@@ -2,7 +2,6 @@ import {
   Button,
   Flex,
   Group,
-  Image,
   Modal,
   Paper,
   Table,
@@ -11,82 +10,67 @@ import {
   Center,
   Box,
   Badge,
+  ActionIcon,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { axiosPrivateInstance } from "../../../api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AlertComponent from "../../../utils/AlertComponent";
-import { CategoryInterface } from "./ListNewBook";
-import { MdBook, MdDelete } from "react-icons/md";
-import { FaEdit, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
+import { FaEdit, FaPlus } from "react-icons/fa";
+import { MdDelete, MdCategory } from "react-icons/md";
 
-export interface BookInterface {
+export interface CategoryInterface {
   id: string;
   createdAt: string;
   updatedAt: string;
-  title: string;
+  name: string;
   description: string;
-  author: string;
-  publisher: string;
-  edition: string;
-  condition: string;
-  photo: File | null | string;
-  price: number;
-  categoryIds: CategoryInterface[];
 }
 
-export default function ListBook() {
-  const headers = [
-    "Title",
-    "Image",
-    "Author",
-    "Price",
-    "Publisher",
-    "Status",
-    "Action",
-  ];
+export default function ListCategories() {
+  const headers = ["Name", "Description", "Created At", "Action"];
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedId, setSelectedId] = useState<string>("");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  //Edit Product
-  function handleEditBook(book: BookInterface) {
-    navigate("/seller/edit-book", { state: { book } });
+  // Edit Category
+  function handleEditCategory(category: CategoryInterface) {
+    navigate("/seller/edit-category", { state: { category } });
   }
 
-  //Delete Product
+  // Delete Category
   function deleteModal(id: string) {
     open();
     setSelectedId(id);
   }
 
-  async function handelDelete(id: string) {
-    await axiosPrivateInstance.delete(`book/${id}`);
+  async function handleDelete(id: string) {
+    await axiosPrivateInstance.delete(`category/${id}`);
   }
 
   const deleteMutation = useMutation({
-    mutationFn: handelDelete,
+    mutationFn: handleDelete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["list-book"] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
       close();
-      toast.success("Book deleted successfully");
+      toast.success("Category deleted successfully");
     },
     onError: (err) => toast.error(err.message),
   });
 
-  //Fetch the product
-  async function fetchProduct() {
-    const res = await axiosPrivateInstance.get("/book/getAll");
+  // Fetch Categories
+  async function fetchCategories() {
+    const res = await axiosPrivateInstance.get("/category");
     return res.data;
   }
 
   const { data, isError, error, isLoading } = useQuery({
-    queryKey: ["list-book"],
-    queryFn: fetchProduct,
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
   });
 
   if (isError) {
@@ -105,7 +89,7 @@ export default function ListBook() {
     <>
       <Modal opened={opened} onClose={close} title="Confirm Deletion" centered>
         <Text mb="md">
-          Are you sure you want to delete this book? This action cannot be
+          Are you sure you want to delete this category? This action cannot be
           undone.
         </Text>
         <Group mt={"md"}>
@@ -129,20 +113,20 @@ export default function ListBook() {
       <Paper bg={"white"} p="lg" mt="xl" shadow="sm" radius={"md"} withBorder>
         <Flex justify={"space-between"} align={"center"} mb="xl">
           <Group>
-            <MdBook size={24} />
+            <MdCategory size={24} />
             <Text fw={600} fz="xl">
-              Your Books
+              Book Categories
             </Text>
             <Badge color="blue" variant="light" size="lg">
-              {data?.length || 0} items
+              {data?.length || 0} genres
             </Badge>
           </Group>
           <Button
             leftSection={<FaPlus size={18} />}
-            onClick={() => navigate("/seller/list-new-book")}
+            onClick={() => navigate("/seller/add-category")}
             radius="md"
           >
-            Add New Book
+            Add New Genre
           </Button>
         </Flex>
 
@@ -155,19 +139,19 @@ export default function ListBook() {
               textAlign: "center",
             }}
           >
-            <MdBook size={48} color="#adb5bd" />
+            <MdCategory size={48} color="#adb5bd" />
             <Text mt="md" c="dimmed" fz="lg">
-              You haven't listed any books yet
+              No categories found
             </Text>
             <Text mb="md" c="dimmed" fz="sm">
-              Start by adding your first book to sell
+              Start by adding your first book genre
             </Text>
             <Button
-              onClick={() => navigate("/seller/list-new-book")}
+              onClick={() => navigate("/seller/add-category")}
               leftSection={<FaPlus size={16} />}
               radius="md"
             >
-              List Your First Book
+              Add First Genre
             </Button>
           </Box>
         ) : (
@@ -185,53 +169,35 @@ export default function ListBook() {
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {data?.map((book: BookInterface) => (
-                <Table.Tr key={book.id}>
+              {data?.map((category: CategoryInterface) => (
+                <Table.Tr key={category.id}>
                   <Table.Td>
-                    <Text fw={500}>{book.title}</Text>
+                    <Text fw={500}>{category.name}</Text>
                   </Table.Td>
                   <Table.Td>
-                    <Image
-                      src={book.photo}
-                      width={60}
-                      height={80}
-                      fit="contain"
-                      fallbackSrc="https://placehold.co/60x80?text=No+Image"
-                      radius="sm"
-                    />
+                    <Text size="sm" c="dimmed" lineClamp={1}>
+                      {category.description}
+                    </Text>
                   </Table.Td>
-                  <Table.Td>{book.author}</Table.Td>
                   <Table.Td>
-                    <Badge color="green" variant="light">
-                      Rs {book.price.toFixed(2)}
-                    </Badge>
-                  </Table.Td>
-                  <Table.Td>{book.publisher}</Table.Td>
-                  <Table.Td>
-                    <Badge color="teal" variant="dot">
-                      Active
-                    </Badge>
+                    {new Date(category.createdAt).toLocaleDateString()}
                   </Table.Td>
                   <Table.Td>
                     <Flex gap="sm">
-                      <Button
+                      <ActionIcon
                         variant="subtle"
                         color="blue"
-                        size="compact-sm"
-                        leftSection={<FaEdit size={14} />}
-                        onClick={() => handleEditBook(book)}
+                        onClick={() => handleEditCategory(category)}
                       >
-                        Edit
-                      </Button>
-                      <Button
+                        <FaEdit size={16} />
+                      </ActionIcon>
+                      <ActionIcon
                         variant="subtle"
                         color="red"
-                        size="compact-sm"
-                        leftSection={<MdDelete size={16} />}
-                        onClick={() => deleteModal(book.id)}
+                        onClick={() => deleteModal(category.id)}
                       >
-                        Delete
-                      </Button>
+                        <MdDelete size={18} />
+                      </ActionIcon>
                     </Flex>
                   </Table.Td>
                 </Table.Tr>

@@ -14,7 +14,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosPublicInstance } from "../../../api";
 
-export default function SellerVerifiedSignup() {
+export default function Verified() {
   const { token } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ export default function SellerVerifiedSignup() {
     try {
       setLoading(true);
       await axiosPublicInstance.post(
-        `/auth/create-seller`,
+        `/auth/create-customer`,
         {
           name: form.getValues().name,
           password: form.getValues().password,
@@ -50,7 +50,7 @@ export default function SellerVerifiedSignup() {
         }
       );
       toast.success("User created successfully");
-      navigate("/seller-login");
+      navigate("/login");
     } catch (e: any) {
       toast.error(e.message);
       console.log(e);
@@ -61,7 +61,7 @@ export default function SellerVerifiedSignup() {
 
   return (
     <Container size={420} my={40}>
-      <Title ta="center">Signup-Seller</Title>
+      <Title ta="center">Create a new account</Title>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <TextInput
@@ -87,7 +87,7 @@ export default function SellerVerifiedSignup() {
           <Anchor
             size="sm"
             component="button"
-            onClick={() => navigate("/seller-login")}
+            onClick={() => navigate("/login")}
             mt="lg"
           >
             Go back to login

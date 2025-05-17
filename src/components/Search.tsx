@@ -1,13 +1,24 @@
-import { Box, Center, Image, Input, Loader, Modal, Text } from "@mantine/core";
+import {
+  Box,
+  Center,
+  Image,
+  Input,
+  Loader,
+  Modal,
+  Text,
+  Paper,
+  Stack,
+  Title,
+  rem,
+} from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaBookOpen } from "react-icons/fa";
 import { axiosPublicInstance } from "../api";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import SearchResult from "./SearchResult";
 import { BookInterface } from "../Pages/seller/ListBook/ListBook";
-import AlertComponent from "../utils/AlertComponent";
 
 interface SearchProps {
   width?: string | number;
@@ -15,7 +26,7 @@ interface SearchProps {
 
 export default function Search({ width }: SearchProps) {
   const [opened, { open, close }] = useDisclosure(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Search input state
+  const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch] = useDebouncedValue(searchTerm, 500);
   const [isSearchActive, setIsSearchActive] = useState(false);
 
@@ -25,7 +36,6 @@ export default function Search({ width }: SearchProps) {
       const res = await axiosPublicInstance.get("/book/search", {
         params: { query },
       });
-      console.log(res.data);
       return res.data;
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -44,21 +54,8 @@ export default function Search({ width }: SearchProps) {
   });
 
   useEffect(() => {
-    if (debouncedSearch) {
-      setIsSearchActive(true);
-    } else {
-      setIsSearchActive(false); // Reset search when input is cleared
-    }
+    setIsSearchActive(debouncedSearch.trim() !== "");
   }, [debouncedSearch]);
-
-  if (isError) {
-    return (
-      <AlertComponent
-        title="An error occured in search"
-        message={error.message}
-      />
-    );
-  }
 
   return (
     <>
@@ -66,40 +63,92 @@ export default function Search({ width }: SearchProps) {
         opened={opened}
         onClose={close}
         closeOnEscape
-        size={500}
+        size={600}
         withCloseButton={false}
+        padding="xl"
+        radius="md"
+        transitionProps={{ transition: "slide-down" }}
       >
-        <Input
-          placeholder="Search in booksbazar"
-          size="md"
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        {isSearchActive ? (
-          <Box mt="md">
+        <Stack gap="md">
+          <Input
+            placeholder="Search books by title, author or ISBN..."
+            size="lg"
+            radius="md"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            autoFocus
+            leftSection={
+              <FaSearch style={{ width: rem(18), height: rem(18) }} />
+            }
+          />
+
+          <Box mih={300}>
             {isLoading ? (
-              <Loader size="lg" mx="auto" />
+              <Center h={300}>
+                <Loader size="xl" type="dots" />
+              </Center>
+            ) : isError ? (
+              <Paper bg="var(--mantine-color-red-light)" p="md" radius="md">
+                <Text c="red" ta="center">
+                  Failed to search: {error.message}
+                </Text>
+              </Paper>
             ) : isSearchActive && data?.length ? (
-              data.map((book: BookInterface) => (
-                <SearchResult book={book} key={book.id} />
-              ))
+              <Stack gap="sm">
+                <Text c="dimmed" size="sm">
+                  Found {data.length} {data.length === 1 ? "result" : "results"}
+                </Text>
+                {data.map((book: BookInterface) => (
+                  <SearchResult book={book} key={book.id} close={close} />
+                ))}
+              </Stack>
+            ) : isSearchActive ? (
+              <Center h={300}>
+                <Stack align="center" gap="xs">
+                  <FaBookOpen size={48} style={{ opacity: 0.5 }} />
+                  <Title order={4} fw={500}>
+                    No books found
+                  </Title>
+                  <Text c="dimmed" ta="center">
+                    Try different search terms
+                  </Text>
+                </Stack>
+              </Center>
             ) : (
-              <Text ta={"center"}>No product found</Text>
+              <Center h={300}>
+                <Stack align="center" gap="xs">
+                  <Image
+                    src="src/assets/image/search.png"
+                    w={300}
+                    alt="Search books"
+                    style={{ opacity: 0.8 }}
+                  />
+                  <Title order={4} fw={500}>
+                    Search our book collection
+                  </Title>
+                  <Text c="dimmed" ta="center">
+                    Find books by title, author or ISBN
+                  </Text>
+                </Stack>
+              </Center>
             )}
           </Box>
-        ) : (
-          <Box>
-            <Center>
-              <Image src={"src/assets/image/search.png"} w={400} />
-            </Center>
-          </Box>
-        )}
+        </Stack>
       </Modal>
+
       <Box>
         <Input
-          placeholder="Search in booksbazar"
+          placeholder="Search books..."
           w={width}
-          leftSection=<FaSearch />
+          radius="md"
           onClick={open}
+          leftSection={<FaSearch style={{ width: rem(16), height: rem(16) }} />}
+          readOnly
+          styles={{
+            input: {
+              cursor: "pointer",
+            },
+          }}
         />
       </Box>
     </>
